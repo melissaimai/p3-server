@@ -3,11 +3,7 @@ const { Schema, model } = require("mongoose");
 // TODO: Please make sure you edit the User model to whatever makes sense in this case
 const productSchema = new Schema(
   {
-    img:
-    {
-      data: Buffer,
-      contentType: String,
-    },
+    img: String,
     price: {
       type: Number,
       required: [true, "Price is required."],
@@ -19,6 +15,9 @@ const productSchema = new Schema(
     description: {
       type: String,
       required: [true, "Description is required."],
+    },
+    createdBy: {
+      type: Schema.Types.ObjectId, ref: 'User'
     },
   },
   {
