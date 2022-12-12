@@ -18,7 +18,7 @@ router.get("/allUsers", isAuthenticated, (req, res) => {
 });
 
 // POST "/api/upload" => Route that receives the image, sends it to Cloudinary via the fileUploader and returns the image URL
-router.post("/upload", fileUploader.single("image"), (req, res, next) => {
+router.post("/upload", fileUploader.single("img"), (req, res, next) => {
   if (!req.file) {
     next(new Error("No file uploaded!"));
     return;
@@ -43,7 +43,7 @@ router.get("/profile/:userId", isAuthenticated, (req, res, next) => {
         name,
         _id,
         isAdmin,
-        image,
+        img,
         description,
         userProducts,
         // follows,
@@ -54,7 +54,7 @@ router.get("/profile/:userId", isAuthenticated, (req, res, next) => {
         name,
         _id,
         isAdmin,
-        image,
+        img,
         description,
         userProducts,
         // follows,
@@ -147,6 +147,20 @@ router.get("/profile/:userId", isAuthenticated, (req, res, next) => {
 //     .catch((err) => next(err));
 // });
 
+//routers for editing a profile
+router.get('/profile/:userId/edit', isAuthenticated, (req, res, next) => {
+  const { userId } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400).json({ message: 'User do not exist' });
+    return;
+  };
+  User.findById(userId)
+    .then(foundUser => {
+      res.json(foundUser)
+    })
+    .catch(err => console.log(err))
+})
+
 router.put("/profile/:userId", isAuthenticated, (req, res, next) => {
   const { userId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -157,11 +171,11 @@ router.put("/profile/:userId", isAuthenticated, (req, res, next) => {
     res.status(401).json({ message: "Wrong credentials" });
     return;
   }
-  const { name, image, description } = req.body;
+  const { name, img, email, description } = req.body;
   console.log(req.body);
   User.findByIdAndUpdate(
     userId,
-    { name, image, description },
+    { name, img, email, description },
     { new: true }
   )
     .then((updatedUser) => res.json(updatedUser))

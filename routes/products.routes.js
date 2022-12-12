@@ -9,7 +9,7 @@ const { isAuthenticated } = require('./../middleware/jwt.middleware.js');
 //show products list (Browse)
 router.get('/products', (req, res) => {
   Product.find()
-    .populate('createdBy', '_id name image')
+    .populate('createdBy', '_id name img')
     .then(products =>
       res.json(products))
     .catch(err => console.log(err))
@@ -59,7 +59,7 @@ router.get('/product/detail/:productId', isAuthenticated, (req, res, next) => {
     return;
   }
   Product.findById(productId)
-    .populate('createdBy', '_id name image')
+    .populate('createdBy', '_id name img')
     .then(product => res.json(product))
     .catch(err => console.log(err))
 })

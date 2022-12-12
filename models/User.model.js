@@ -7,7 +7,7 @@ const userSchema = new Schema(
     password: { type: String, required: [true, "Password is required."], },
     name: { type: String, required: [true, "Name is required."], },
     isAdmin: { type: Boolean, default: false },
-    image: String,
+    img: String,
     description: String,
 
     userProducts: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
