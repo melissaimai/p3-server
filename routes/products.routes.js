@@ -5,6 +5,7 @@ const Product = require('../models/Product.model')
 const User = require('../models/User.model')
 const fileUploader = require("../config/cloudinary.config");
 const { isAuthenticated } = require('./../middleware/jwt.middleware.js');
+const stripe = require("./stripe")
 
 //show products list (Browse)
 router.get('/products', (req, res) => {
@@ -176,6 +177,64 @@ router.put('/product/:productId', isAuthenticated, (req, res, next) => {
 //     })
 //     .catch(err => console.log(err))
 // })
+
+// put a product into the wishlist
+router.put("/product/:productId/like", isAuthenticated, (req, res, next) => {
+  const { productId } = req.params;
+  const authID = req.payload._id;
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    res.status(400).json({ message: 'Specified id is not valid' });
+    return;
+  };
+  Product.findById(productId)
+    .then(foundProduct => {
+      if (foundProduct.createdBy.valueOf() !== req.payload._id) {
+        res.status(401).json({ message: "Wrong credentials" });
+        return;
+      }
+      User.findByIdAndUpdate(authID, { $push: { likedProducts: productId } }, { new: true })
+        .then((updatedUser) => {
+          res.json(updatedUser);
+        })
+        .catch((err) => console.log(err));
+    });
+})
+
+// router.put('/product/:productId', isAuthenticated, (req, res, next) => {
+//   const { productId } = req.params;
+//   if (!mongoose.Types.ObjectId.isValid(productId)) {
+//     res.status(400).json({ message: 'Specified id is not valid' });
+//     return;
+//   };
+//   Product.findById(productId)
+//     .then(foundProduct => {
+//       if (foundProduct.createdBy.valueOf() !== req.payload._id) {
+//         res.status(401).json({ message: "Wrong credentials" });
+//         return;
+//       }
+//       const { img, title, price, description } = req.body
+//       return Product.findByIdAndUpdate(foundProduct._id, { img, title, price, description }, { new: true })
+//         .then((updatedProduct) => {
+//           return res.json(updatedProduct)
+//         })
+//     })
+//     .catch(err => console.log(err))
+// })
+
+
+// remove a product from the wishlist
+router.put("/product/:productId/unlike", isAuthenticated, (req, res, next) => {
+  const { productId } = req.params;
+
+  const authID = req.payload._id;
+  User.findByIdAndUpdate(authID, { $pull: { likedProducts: productId } }, { new: true })
+    .then((updatedUser) => {
+      res.json(updatedUser);
+    })
+    .catch((err) => console.log(err));
+});
+
+
 
 
 router.delete('/products/:productId', isAuthenticated, (req, res) => {

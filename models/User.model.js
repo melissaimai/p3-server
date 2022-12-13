@@ -9,7 +9,6 @@ const userSchema = new Schema(
     isAdmin: { type: Boolean, default: false },
     img: String,
     description: String,
-
     userProducts: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     likedProducts: [{ type: Schema.Types.ObjectId, ref: 'Product' }],
     follows: [{ type: Schema.Types.ObjectId, ref: 'User' }],

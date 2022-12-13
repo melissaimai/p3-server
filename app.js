@@ -21,6 +21,9 @@ app.use("/api", indexRoutes);
 const productRoutes = require("./routes/products.routes");
 app.use("/api", productRoutes)
 
+const stripe = require("./routes/stripe");
+app.use("/api/stripe", stripe)
+
 const profileRoutes = require("./routes/profile.routes");
 app.use("/api", profileRoutes)
 
