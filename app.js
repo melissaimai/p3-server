@@ -24,6 +24,9 @@ app.use("/api", productRoutes)
 const stripe = require("./routes/stripe");
 app.use("/api/stripe", stripe)
 
+const ordersRoutes = require("./routes/orders.routes");
+app.use("/api", ordersRoutes)
+
 const profileRoutes = require("./routes/profile.routes");
 app.use("/api", profileRoutes)
 
