@@ -12,6 +12,10 @@ const orderSchema = new mongoose.Schema(
           quantity: { type: Number, default: 1 },
           img: { type: String },
           title: { type: String },
+          sold: {
+            type: Boolean,
+            default: true
+          },
         },
       ],
     subtotal: { type: Number, required: true },
