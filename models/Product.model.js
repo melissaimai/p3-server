@@ -22,10 +22,10 @@ const productSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId, ref: 'User'
     },
-    // sold: {
-    //   type: Boolean,
-    //   default: false
-    // },
+    sold: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`

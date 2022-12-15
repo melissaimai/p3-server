@@ -5,6 +5,7 @@ const { Order } = require('../models/Order');
 require("dotenv").config()
 const stripe = Stripe(process.env.STRIPE_KEY)
 const router = express.Router()
+const Product = require("../models/Product.model")
 
 router.post('/create-checkout-session', async (req, res) => {
   const product = req.body.product;
@@ -94,8 +95,6 @@ router.post('/create-checkout-session', async (req, res) => {
 //Create Order
 const createOrder = async (customer, data) => {
   const Item = JSON.parse(customer.metadata.product);
-  console.log(customer)
-
 
   const newOrder = new Order({
     userId: customer.metadata.userId,
@@ -110,7 +109,11 @@ const createOrder = async (customer, data) => {
 
   try {
     const savedOrder = await newOrder.save();
-    console.log("Processed Order:", savedOrder);
+    // await Product.findByIdAndUpdate(savedOrder.product[0]._id, { $push: { sold: true } }, { new: true })
+    await Product.findByIdAndUpdate(savedOrder.product[0]._id, [{ $set: { sold: { $eq: [false, "$sold"] } } }], { new: true })
+    // console.log("Processed Order:", savedOrder);
+    // console.log("MINHAAAAAAAAA", savedOrder.product[0]._id);
+    return savedOrder
   } catch (err) {
     console.log(err);
   }

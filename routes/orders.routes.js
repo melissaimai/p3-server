@@ -14,8 +14,9 @@ const { isAuthenticated } = require('./../middleware/jwt.middleware.js');
 router.post("/orders", isAuthenticated, async (req, res) => {
   const newOrder = new Order(req.body);
   try {
-    console.log(req.body)
     const savedOrder = await newOrder.save();
+    console.log("savedOrder ROUTES", savedOrder)
+    await Product.findByIdAndUpdate(productId, { $push: { sold: true } }, { new: true })
     res.status(200).send(savedOrder);
   } catch (err) {
     res.status(500).send(err);
