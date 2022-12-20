@@ -15,8 +15,7 @@ router.post("/orders", isAuthenticated, async (req, res) => {
   const newOrder = new Order(req.body);
   try {
     const savedOrder = await newOrder.save();
-    console.log("savedOrder ROUTES", savedOrder)
-    await Product.findByIdAndUpdate(productId, { $push: { sold: true } }, { new: true })
+    await Product.findByIdAndUpdate(savedOrder.product[0]._id, [{ $set: { sold: { $eq: [false, "$sold"] } } }], { new: true })
     res.status(200).send(savedOrder);
   } catch (err) {
     res.status(500).send(err);

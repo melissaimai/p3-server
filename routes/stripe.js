@@ -109,7 +109,7 @@ const createOrder = async (customer, data) => {
 
   try {
     const savedOrder = await newOrder.save();
-    // await Product.findByIdAndUpdate(savedOrder.product[0]._id, { $push: { sold: true } }, { new: true })
+    console.log('oeeeeeeeeeeeeeeeeee ', savedOrder)
     await Product.findByIdAndUpdate(savedOrder.product[0]._id, [{ $set: { sold: { $eq: [false, "$sold"] } } }], { new: true })
     // console.log("Processed Order:", savedOrder);
     // console.log("MINHAAAAAAAAA", savedOrder.product[0]._id);
